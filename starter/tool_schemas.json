@@ -1,0 +1,24 @@
+{
+  "tools": [
+    {
+      "name": "weather",
+      "schema": {"tool": "weather", "args": {"location": "string", "unit": "C|F"}}
+    },
+    {
+      "name": "calendar",
+      "schema": {"tool": "calendar", "args": {"action": "list|create", "date": "YYYY-MM-DD", "title": "string?"}}
+    },
+    {
+      "name": "convert",
+      "schema": {"tool": "convert", "args": {"value": "number", "from_unit": "string", "to_unit": "string"}}
+    },
+    {
+      "name": "currency",
+      "schema": {"tool": "currency", "args": {"amount": "number", "from": "ISO3", "to": "ISO3"}}
+    },
+    {
+      "name": "sql",
+      "schema": {"tool": "sql", "args": {"query": "string"}}
+    }
+  ]
+}
