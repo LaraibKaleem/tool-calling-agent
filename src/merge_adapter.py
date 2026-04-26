@@ -33,7 +33,13 @@ def main():
         device_map="cpu",
         trust_remote_code=True,
     )
-    tokenizer = AutoTokenizer.from_pretrained(args.adapter, trust_remote_code=True)
+    
+    # tokenizer = AutoTokenizer.from_pretrained(args.adapter, trust_remote_code=True)
+    
+    tokenizer = AutoTokenizer.from_pretrained(
+    "Qwen/Qwen2.5-0.5B-Instruct",
+    trust_remote_code=True
+    )
 
     print("Loading LoRA adapter ...")
     model = PeftModel.from_pretrained(model, args.adapter)
