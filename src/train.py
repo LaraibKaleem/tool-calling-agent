@@ -147,7 +147,6 @@ def main():
         args=training_args,
         train_dataset=train_ds,
         eval_dataset=val_ds,
-        dataset_text_field="text",
         max_seq_length=args.max_seq_len,
         packing=True,
         callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
