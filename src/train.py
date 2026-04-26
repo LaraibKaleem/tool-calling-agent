@@ -9,7 +9,7 @@ from transformers import (
     BitsAndBytesConfig, TrainingArguments, EarlyStoppingCallback,
 )
 from peft import LoraConfig, get_peft_model, TaskType, prepare_model_for_kbit_training
-from trl import   SFTTrainer
+from trl import   SFTTrainer, SFTConfig
 
 DEFAULT_BASE_MODEL = "Qwen/Qwen2.5-0.5B-Instruct"
 DEFAULT_OUTPUT_DIR = "artifacts/lora_adapter"
