@@ -1,4 +1,4 @@
-# 🔧 Tool-Calling Mobile Assistant
+<!-- # 🔧 Tool-Calling Mobile Assistant
 
 A fine-tuned **Qwen2.5-0.5B-Instruct** model that performs structured 
 tool calls for an on-device mobile assistant. Runs fully offline, 
@@ -180,4 +180,4 @@ Other models tested and why rejected:
 ---
 
 
-
+ -->
