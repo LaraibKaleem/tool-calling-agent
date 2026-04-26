@@ -142,16 +142,33 @@ def main():
     #     packing=True,
     #     callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
     # )
+    # trainer = SFTTrainer(
+    #     model=model,
+    #     args=training_args,
+    #     train_dataset=train_ds,
+    #     eval_dataset=val_ds,
+    #     max_seq_length=args.max_seq_len,
+    #     packing=True,
+    #     callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
+    # )
+    sft_config = SFTConfig(
+    output_dir="artifacts/lora_adapter",
+    num_train_epochs=3,
+    per_device_train_batch_size=4,
+    gradient_accumulation_steps=4,
+    learning_rate=2e-4,
+    logging_steps=10,
+    save_steps=200,
+    max_seq_length=512,   # ✅ NOW goes here
+    packing=True
+)
     trainer = SFTTrainer(
         model=model,
-        args=training_args,
-        train_dataset=train_ds,
-        eval_dataset=val_ds,
-        max_seq_length=args.max_seq_len,
-        packing=True,
-        callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
+        tokenizer=tokenizer,
+        train_dataset=train_dataset,
+        eval_dataset=val_dataset,
+        args=sft_config,
     )
-
 
     print("\nStarting training ...")
     trainer.train()
