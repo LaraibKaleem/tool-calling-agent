@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 # 🤖 On-Device Tool-Calling AI Assistant
 
 An AI agent that understands what you say and executes  the right action — running entirely on your device.
@@ -120,7 +118,6 @@ The future this points toward is personal AI that is:
 
 This project is an early working proof of that future.
 
->>>>>>> 977c2c6d60a65ffa8396135a50746b6e470b8708
 <!-- # 🔧 Tool-Calling Mobile Assistant
 
 A fine-tuned **Qwen2.5-0.5B-Instruct** model that performs structured 
