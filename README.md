@@ -645,7 +645,4 @@ A 310 MB model on a mid-range Android phone means:
 - Anyone on a plane can use a full AI assistant
 
 This project is a small step toward AI that is truly 
-accessible, private, and free for everyone.
 
->>>>>>> 977c2c6d60a65ffa8396135a50746b6e470b8708
- -->
