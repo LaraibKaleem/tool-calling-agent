@@ -39,8 +39,10 @@ def main():
     out_dir = pathlib.Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    use_4bit   = torch.cuda.is_available()
-    device_map = "auto" if torch.cuda.is_available() else "cpu"
+    # use_4bit   = torch.cuda.is_available()
+    use_4bit = False
+    device_map = "auto" 
+    # if torch.cuda.is_available() else "cpu"
     print(f"Device: {device_map} | 4bit: {use_4bit} | Model: {args.base_model}")
 
     print("Loading tokenizer ...")
@@ -52,24 +54,38 @@ def main():
 
     print("Loading model ...")
     bnb_config = None
-    if use_4bit:
-        bnb_config = BitsAndBytesConfig(
-            load_in_4bit=True,
-            bnb_4bit_quant_type="nf4",
-            bnb_4bit_compute_dtype=torch.bfloat16,
-            bnb_4bit_use_double_quant=True,
-        )
+    # if use_4bit:
+        # bnb_config = None
+        # bnb_config = BitsAndBytesConfig(
+        #     # load_in_4bit=True,
+        #     bnb_4bit_quant_type="nf4",
+        #     bnb_4bit_compute_dtype=torch.bfloat16,
+        #     bnb_4bit_use_double_quant=True,
+        # )
     model = AutoModelForCausalLM.from_pretrained(
+        # args.base_model,
+        # device_map="auto",
+        # trust_remote_code=True,
+
         args.base_model,
         quantization_config=bnb_config,
         device_map=device_map,
         trust_remote_code=True,
-        torch_dtype=torch.bfloat16 if not use_4bit else None,
+        torch_dtype=torch.float16,
+        optim="adamw_torch",
+        # torch_dtype=torch.bfloat16 if not use_4bit else None,
         attn_implementation="eager",
     )
+    # model = AutoModelForCausalLM.from_pretrained(
+    # args.base_model,
+    # device_map=device_map,
+    # trust_remote_code=True,
+    # torch_dtype=torch.float16,
+    # attn_implementation="eager",
+    # )
     model.config.use_cache = False
-    if use_4bit:
-        model = prepare_model_for_kbit_training(model)
+    # if use_4bit:
+    #     model = prepare_model_for_kbit_training(model)
 
     peft_config = LoraConfig(
         r=args.lora_rank,
@@ -94,8 +110,10 @@ def main():
         )
         return {"text": text}
 
-    train_ds = train_ds.map(format_messages, remove_columns=["messages","id"])
-    val_ds   = val_ds.map(format_messages,   remove_columns=["messages","id"])
+    # train_ds = train_ds.map(format_messages, remove_columns=["messages","id"])
+    # val_ds   = val_ds.map(format_messages,   remove_columns=["messages","id"])
+    train_ds = train_ds.map(format_messages, remove_columns=train_ds.column_names)
+    val_ds   = val_ds.map(format_messages, remove_columns=val_ds.column_names)
     print(f"Train: {len(train_ds)}  Val: {len(val_ds)}")
 
     fp16 = torch.cuda.is_available() and not torch.cuda.is_bf16_supported()
@@ -124,13 +142,14 @@ def main():
         report_to="none",
         seed=args.seed,
         dataloader_num_workers=0,
-        optim="paged_adamw_8bit" if use_4bit else "adamw_torch",
+        optim="adamw_torch" ,
         gradient_checkpointing=True,
         gradient_checkpointing_kwargs={"use_reentrant": False},
         max_grad_norm=1.0,
         weight_decay=0.01,
     )
-
+#  optim="adamw_torch" 
+#         if use_4bit else "adamw_torch",
     # trainer = SFTTrainer(
     #     model=model,
     #     tokenizer=tokenizer,
@@ -147,6 +166,7 @@ def main():
         args=training_args,
         train_dataset=train_ds,
         eval_dataset=val_ds,
+        dataset_text_field="text",
         packing=True,
         callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
     )

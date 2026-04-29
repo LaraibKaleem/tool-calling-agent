@@ -81,5 +81,6 @@ def main():
         json.dump(manifest, f, indent=2)
     print("Quantization complete!")
 
+
 if __name__ == "__main__":
     main()
