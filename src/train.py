@@ -72,7 +72,6 @@ def main():
         device_map=device_map,
         trust_remote_code=True,
         torch_dtype=torch.float16,
-        optim="adamw_torch",
         # torch_dtype=torch.bfloat16 if not use_4bit else None,
         attn_implementation="eager",
     )
@@ -142,7 +141,6 @@ def main():
         report_to="none",
         seed=args.seed,
         dataloader_num_workers=0,
-        optim="adamw_torch" ,
         gradient_checkpointing=True,
         gradient_checkpointing_kwargs={"use_reentrant": False},
         max_grad_norm=1.0,
