@@ -1,5 +1,87 @@
 # 🤖 On-Device Tool-Calling AI Assistant
 
+An AI agent that understands natural language and executes 
+structured tool calls — running 100% offline on your device.
+
+Built by **Laraib Kaleem**
+
+---
+
+## What Is This?
+
+This is not a chatbot. This is an agent.
+
+It listens to what you say, decides which tool fits, 
+and outputs a structured JSON command — no internet, 
+no cloud, no subscription required.
+
+---
+
+## Why It Matters
+
+Most AI assistants send your data to remote servers.
+This one runs entirely on your device.
+
+| | Cloud AI | This Project |
+|---|---|---|
+| Internet needed | Yes | No |
+| Monthly cost | $20+ | Free forever |
+| Data privacy | Sent to cloud | Stays on device |
+| Works offline | No | Yes |
+
+---
+
+## What It Can Do
+
+| Tool | Example |
+|---|---|
+| Weather | "How hot is Tokyo?" |
+| Calendar | "Schedule dentist on July 15th" |
+| Unit Convert | "Convert 5 kg to pounds" |
+| Currency | "Convert 500 USD to EUR" |
+| SQL | "SELECT * FROM users WHERE age > 25" |
+
+Also handles:
+- Multi-turn conversations with memory
+- Typos and informal spelling
+- Hindi and Urdu mixed prompts
+- Refuses gracefully when no tool fits
+
+---
+
+## Technical Highlights
+
+- Base model: Qwen2.5-0.5B-Instruct (494M parameters)
+- Fine-tuned with LoRA on 2000 synthetic examples
+- Quantized to GGUF Q4_K_M — only 310 MB
+- Runs at 140 tokens/sec on CPU
+- Response time: ~23ms per turn
+- Accuracy: 86.6% on test set
+
+---
+
+## Stack
+
+Python · PyTorch · HuggingFace Transformers · LoRA · 
+QLoRA · PEFT · TRL · llama.cpp · GGUF · Gradio · Git
+
+---
+
+## Real World Impact
+
+A 310 MB model on any mid-range phone means:
+- Farmers in rural areas querying crop databases offline
+- Doctors in remote clinics accessing patient records
+- Students with no WiFi managing their schedule
+- Anyone on a plane with a full AI assistant
+
+AI should be for everyone — not just people with 
+fast internet and monthly subscriptions.
+
+
+
+<!-- # 🤖 On-Device Tool-Calling AI Assistant
+
 An AI agent that understands what you say and executes  the right action — running entirely on your device.
 No internet. No cloud. No privacy risk.
 
@@ -116,7 +198,7 @@ The future this points toward is personal AI that is:
 - Free forever not by subscription
 - Available everywhere not just where WiFi exists
 
-This project is an early working proof of that future.
+This project is an early working proof of that future. -->
 
 <!-- # 🔧 Tool-Calling Mobile Assistant
 
