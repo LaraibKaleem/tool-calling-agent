@@ -72,6 +72,7 @@ def main():
         device_map=device_map,
         trust_remote_code=True,
         torch_dtype=torch.float16,
+        
         # torch_dtype=torch.bfloat16 if not use_4bit else None,
         attn_implementation="eager",
     )
