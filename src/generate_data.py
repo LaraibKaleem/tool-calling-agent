@@ -207,6 +207,29 @@ CODE_SWITCH_PREFIXES = [
     "Please bhai ","Yaar bata ","Ap mujhe batao ",
 ]
 
+CODE_SWITCH_PREFIXES = [
+    "Bhai ","Yaar ","Mujhe batao ","Ji ","Por favor ","Oye ",
+    "Please bhai ","Yaar bata ","Ap mujhe batao ",
+]
+
+HINDI_URDU_WEATHER = [
+    ("Mujhe {city} ka mausam batao Celsius mein",    "C"),
+    ("Mujhe {city} ka mausam batao Fahrenheit mein", "F"),
+    ("Ap mujhe {city} ka mausam batao",              "C"),
+    ("Bhai {city} mein kitni garmi hai",             "C"),
+    ("Bhai {city} mein kitni sardi hai",             "C"),
+    ("Yaar {city} ka mausam kaisa hai",              "C"),
+    ("{city} mein aaj mausam kaisa hai",             "C"),
+    ("Mujhe {city} ka temperature batao Celsius",    "C"),
+    ("Mujhe {city} ka temperature batao Fahrenheit", "F"),
+    ("Bhai {city} mein kitni garmi hai Fahrenheit",  "F"),
+    ("Ap batao {city} mein kaisa mausam hai",        "C"),
+    ("Ji {city} ka mausam kya hai aaj",              "C"),
+    ("{city} ka mausam batao",                       "C"),
+    ("Aaj {city} mein mausam kaisa hai",             "C"),
+    ("Bhai zara {city} ka mausam check karo",        "C"),
+]
+
 def random_date() -> str:
     base = date(2024, 1, 1)
     return (base + timedelta(days=random.randint(0, 730))).strftime("%Y-%m-%d")
@@ -369,6 +392,32 @@ def gen_adversarial():
         prefix = random.choice(CODE_SWITCH_PREFIXES)
         ex["prompt"] = prefix + ex["prompt"][0].lower() + ex["prompt"][1:]
     return ex
+
+
+# def gen_adversarial():
+#     gen = random.choice([gen_weather, gen_currency, gen_convert])
+#     ex  = gen()
+#     if random.random() < 0.5:
+#         ex["prompt"] = add_typos(ex["prompt"])
+#     else:
+#         prefix = random.choice(CODE_SWITCH_PREFIXES)
+#         ex["prompt"] = prefix + ex["prompt"][0].lower() + ex["prompt"][1:]
+#     return ex
+
+def gen_hindi_urdu_weather():
+    city     = random.choice(CITIES)
+    template, unit = random.choice(HINDI_URDU_WEATHER)
+    prompt   = template.format(city=city)
+    return {
+        "history": [],
+        "prompt": prompt,
+        "expected": {
+            "type": "tool_call",
+            "tool": "weather",
+            "args": {"location": city, "unit": unit}
+        },
+        "response": mk_tool_call("weather", {"location": city, "unit": unit}),
+    }
 
 GENERATORS = [
     (gen_weather,             0.20),
