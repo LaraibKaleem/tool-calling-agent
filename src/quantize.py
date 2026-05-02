@@ -46,8 +46,8 @@ def main():
     build_dir = llama_dir / "build"
     build_dir.mkdir(exist_ok=True)
     print("Building llama.cpp ...")
-    run(["cmake",".."], )
-    run(["cmake","--build",".","--config","Release","--parallel","4"])
+    run(["cmake",".."], ), cwd=str(build_dir))
+    run(["cmake","--build",".","--config","Release","--parallel","4"]),  cwd=str(build_dir)
 
     # Convert to f16 GGUF
     fp16_gguf = out_dir / "model_f16.gguf"
