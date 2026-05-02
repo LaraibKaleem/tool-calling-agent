@@ -46,7 +46,7 @@ def main():
     build_dir = llama_dir / "build"
     build_dir.mkdir(exist_ok=True)
     print("Building llama.cpp ...")
-    run(["cmake",".."], ), cwd=str(build_dir))
+    run(["cmake",".."], ), cwd=str(build_dir)
     run(["cmake","--build",".","--config","Release","--parallel","4"]),  cwd=str(build_dir)
 
     # Convert to f16 GGUF
