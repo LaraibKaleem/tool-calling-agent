@@ -37,7 +37,6 @@ def create_app():
         "What meetings do I have on 2024-07-04?",
         "Exchange 1000 GBP to JPY",
     ]
-
     def chat(user_message, chat_history, raw_history):
         if not user_message.strip():
             return "", chat_history, raw_history
@@ -45,10 +44,23 @@ def create_app():
         raw = inf_module.run(user_message, raw_history)
         ms  = (time.perf_counter() - t0) * 1000
         formatted = render_response(raw, ms)
-        chat_history.append((user_message, formatted))
-        raw_history.append({"role":"user",      "content":user_message})
-        raw_history.append({"role":"assistant",  "content":raw})
+        chat_history.append({"role": "user",      "content": user_message})
+        chat_history.append({"role": "assistant",  "content": formatted})
+        raw_history.append({"role": "user",        "content": user_message})
+        raw_history.append({"role": "assistant",   "content": raw})
         return "", chat_history, raw_history
+
+    # def chat(user_message, chat_history, raw_history):
+    #     if not user_message.strip():
+    #         return "", chat_history, raw_history
+    #     t0  = time.perf_counter()
+    #     raw = inf_module.run(user_message, raw_history)
+    #     ms  = (time.perf_counter() - t0) * 1000
+    #     formatted = render_response(raw, ms)
+    #     chat_history.append((user_message, formatted))
+    #     raw_history.append({"role":"user",      "content":user_message})
+    #     raw_history.append({"role":"assistant",  "content":raw})
+    #     return "", chat_history, raw_history
 
     def clear_chat():
         return [], []
