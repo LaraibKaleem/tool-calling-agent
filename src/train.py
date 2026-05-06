@@ -141,17 +141,18 @@ def main():
     # train_ds = train_ds.map(fix_messages)
     # val_ds   = val_ds.map(fix_messages)
 
-      text = tokenizer.apply_chat_template(
-        example["messages"],
-        tokenize=False,
-        add_generation_prompt=False
-    )
+    def format_messages(example):
+        text = tokenizer.apply_chat_template(
+            example["messages"],
+            tokenize=False,
+            add_generation_prompt=False
+        )
 
-    # FORCE STRING SAFETY (IMPORTANT FIX)
-    if isinstance(text, list):
-        text = "".join(text)
+        # FORCE STRING SAFETY (IMPORTANT FIX)
+        if isinstance(text, list):
+            text = "".join(text)
 
-    return {"text": str(text)}
+        return {"text": str(text)}
 
     train_ds = train_ds.map(format_messages, remove_columns=train_ds.column_names)
     val_ds   = val_ds.map(format_messages, remove_columns=val_ds.column_names)
