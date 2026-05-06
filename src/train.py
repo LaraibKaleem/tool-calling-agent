@@ -104,22 +104,21 @@ def main():
     train_ds  = Dataset.from_list(train_raw)
     val_ds    = Dataset.from_list(val_raw)
 
-    def format_messages(example):
-        msgs = example["messages"]
-
-        fixed = []
-        for m in msgs:
-            if isinstance(m, dict):
-                fixed.append([m["role"], m["content"]])
-            else:
-                fixed.append(m)
-
-        text = tokenizer.apply_chat_template(
-            fixed,
-            tokenize=False,
-            add_generation_prompt=False
-        )
-        return {"text": text}
+    # def format_messages(example):
+    #     msgs = example["messages"]
+    #     fixed = []
+    #     for m in msgs:
+    #         if isinstance(m, dict):
+    #             fixed.append([m["role"], m["content"]])
+    #         else:
+    #             fixed.append(m)
+    #     text = tokenizer.apply_chat_template(
+    #         fixed,
+    #         tokenize=False,
+    #         add_generation_prompt=False
+    #     )
+    #     return {"text": text}
+    
     # def format_messages(example):
     #     text = tokenizer.apply_chat_template(
     #         example["messages"], tokenize=False, add_generation_prompt=False
@@ -137,11 +136,23 @@ def main():
     #             fixed.append(m)
     #     return {"messages": fixed}
 
-
     # train_ds = train_ds.map(format_messages, remove_columns=["messages","id"])
     # val_ds   = val_ds.map(format_messages,   remove_columns=["messages","id"])
     # train_ds = train_ds.map(fix_messages)
     # val_ds   = val_ds.map(fix_messages)
+
+      text = tokenizer.apply_chat_template(
+        example["messages"],
+        tokenize=False,
+        add_generation_prompt=False
+    )
+
+    # FORCE STRING SAFETY (IMPORTANT FIX)
+    if isinstance(text, list):
+        text = "".join(text)
+
+    return {"text": str(text)}
+
     train_ds = train_ds.map(format_messages, remove_columns=train_ds.column_names)
     val_ds   = val_ds.map(format_messages, remove_columns=val_ds.column_names)
     print(f"Train: {len(train_ds)}  Val: {len(val_ds)}")
