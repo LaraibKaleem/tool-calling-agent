@@ -36,7 +36,7 @@ def create_app():
         "Tell me a joke",
         "What meetings do I have on 2024-07-04?",
         "Exchange 1000 GBP to JPY",
-    ]
+        ]
     def chat(user_message, chat_history, raw_history):
         if not user_message.strip():
             return "", chat_history, raw_history
