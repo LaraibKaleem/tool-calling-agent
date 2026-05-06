@@ -105,15 +105,31 @@ def main():
     val_ds    = Dataset.from_list(val_raw)
 
     def format_messages(example):
-        text = tokenizer.apply_chat_template(
-            example["messages"], tokenize=False, add_generation_prompt=False
-        )
-        return {"text": text}
+        msgs = example["messages"]
 
-    # train_ds = train_ds.map(format_messages, remove_columns=["messages","id"])
-    # val_ds   = val_ds.map(format_messages,   remove_columns=["messages","id"])
-    train_ds = train_ds.map(format_messages, remove_columns=train_ds.column_names)
-    val_ds   = val_ds.map(format_messages, remove_columns=val_ds.column_names)
+        # safety check (prevents crash)
+        for m in msgs:
+            if not isinstance(m, dict):
+                raise ValueError(f"Bad format: {m}")
+            if "role" not in m or "content" not in m:
+                raise ValueError(f"Invalid message: {m}")
+
+        text = tokenizer.apply_chat_template(
+            msgs,
+            tokenize=False,
+            add_generation_prompt=False
+        )
+
+        return {"text": text}
+        # text = tokenizer.apply_chat_template(
+        #     example["messages"], tokenize=False, add_generation_prompt=False
+        # )
+        # return {"text": text}
+
+    train_ds = train_ds.map(format_messages, remove_columns=["messages","id"])
+    val_ds   = val_ds.map(format_messages,   remove_columns=["messages","id"])
+    # train_ds = train_ds.map(format_messages, remove_columns=train_ds.column_names)
+    # val_ds   = val_ds.map(format_messages, remove_columns=val_ds.column_names)
     print(f"Train: {len(train_ds)}  Val: {len(val_ds)}")
 
     fp16 = torch.cuda.is_available() and not torch.cuda.is_bf16_supported()
@@ -165,6 +181,7 @@ def main():
         args=training_args,
         train_dataset=train_ds,
         eval_dataset=val_ds,
+        dataset_text_field="text",   # 🔥 ADD THIS
         callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
     )
 
