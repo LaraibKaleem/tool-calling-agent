@@ -104,60 +104,15 @@ def main():
     train_ds  = Dataset.from_list(train_raw)
     val_ds    = Dataset.from_list(val_raw)
 
-    # def format_messages(example):
-    #     msgs = example["messages"]
-    #     fixed = []
-    #     for m in msgs:
-    #         if isinstance(m, dict):
-    #             fixed.append([m["role"], m["content"]])
-    #         else:
-    #             fixed.append(m)
-    #     text = tokenizer.apply_chat_template(
-    #         fixed,
-    #         tokenize=False,
-    #         add_generation_prompt=False
-    #     )
-    #     return {"text": text}
-    
-    # def format_messages(example):
-    #     text = tokenizer.apply_chat_template(
-    #         example["messages"], tokenize=False, add_generation_prompt=False
-    #     )
-    #     return {"text": text}
-    
-    # def fix_messages(example):
-    #     msgs = example["messages"]
-    #     fixed = []
-    #     for m in msgs:
-    #         # convert {"role":..., "content":...} → ["role","content"]
-    #         if isinstance(m, dict):
-    #             fixed.append([m["role"], m["content"]])
-    #         else:
-    #             fixed.append(m)
-    #     return {"messages": fixed}
-
-    # train_ds = train_ds.map(format_messages, remove_columns=["messages","id"])
-    # val_ds   = val_ds.map(format_messages,   remove_columns=["messages","id"])
-    # train_ds = train_ds.map(fix_messages)
-    # val_ds   = val_ds.map(fix_messages)
-
     def format_messages(example):
         text = tokenizer.apply_chat_template(
-            example["messages"],
-            tokenize=False,
-            add_generation_prompt=False
+            example["messages"], tokenize=False, add_generation_prompt=False
         )
+        return {"text": text}
 
-        # FORCE STRING SAFETY (IMPORTANT FIX)
-        if isinstance(text, list):
-            text = "".join(text)
-
-        return {"text": str(text)}
-
-    train_ds = train_ds.map(format_messages, remove_columns=train_ds.column_names)
-    val_ds   = val_ds.map(format_messages, remove_columns=val_ds.column_names)
+    train_ds = train_ds.map(format_messages, remove_columns=["messages","id"])
+    val_ds   = val_ds.map(format_messages,   remove_columns=["messages","id"])
     print(f"Train: {len(train_ds)}  Val: {len(val_ds)}")
-    
 
     fp16 = torch.cuda.is_available() and not torch.cuda.is_bf16_supported()
     bf16 = torch.cuda.is_available() and torch.cuda.is_bf16_supported()
